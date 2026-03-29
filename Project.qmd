@@ -6,3 +6,44 @@ toc: true
   toc-float: true
 editor: visual
 ---
+
+# Research Question: Is the running location statistically significant? Does the running location affect Patrick's distance and mile time?
+
+# Set-up
+
+## library
+```{r}
+#| label: library
+#| echo: false
+#| warning: false
+#| message: false
+
+library(tidyverse) ## data cleaning
+library(sf)
+library(tmap) ## add maps
+
+```
+
+## load data
+```{r}
+#| label: load data
+#| echo: false
+#| warning: false
+#| message: false
+
+
+run_df <- read.csv("Activities.csv")
+```
+
+## data cleaning
+```{r}
+#| label: run-df-clean
+#| eval: false
+
+run_df_clean <- run_df %>% 
+  filter(Activity.Type == "Running") %>% 
+  select(Activity.Type, Date, Title, Distance, Time, Avg.HR, Steps, Min.Elevation, Max.Elevation) %>% ## select columns I only need
+
+## Note: I can only proceed once I have the complete dataset on hand after Garmin sends it to me.
+```
+
