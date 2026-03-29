@@ -21,6 +21,7 @@ editor: visual
 library(tidyverse) ## data cleaning
 library(sf)
 library(tmap) ## add maps
+library(FITfileR)
 
 ```
 
@@ -35,7 +36,56 @@ library(tmap) ## add maps
 run_df <- read.csv("Activities.csv")
 ```
 
+
 ## data cleaning
+
+### create path to .fit files and convert to .sf object in R
+```{r}
+#| label: run-files
+
+run_files <- list.files(path = "garmin_export_3-29-2026/DI_CONNECT/DI-Connect-Uploaded-Files/UploadedFiles_0-_Part1",
+                        pattern = "*.fit",
+                        full.names = TRUE)
+
+```
+
+### create function to read fit files and convert to spatial objects
+```{r}
+#| label: read-run-path-function
+
+read_run_path <- function(file) {
+  
+  data <- readFitFile(file)
+  
+  records <- records(data) %>% 
+              bind_rows() # Extracts the GPS points
+  
+  # Convert to spatial object
+  st_as_sf(records, coords = c("position_long", "position_lat"), crs = 4326) %>%
+    summarize(do_union = FALSE) %>%
+    st_cast("LINESTRING") # Connect dots into a path
+}
+
+
+```
+
+
+### utilize function to process runs
+```{r}
+#| label: process-all-files
+
+## this makes sure R does not crash
+safe_read_run <- possibly(read_run_path, otherwise = NULL) 
+
+## use our safe run fxn on all the run files
+all_runs_list <- map(run_files, safe_read_run) 
+
+## remove NULLs (basically runs were the GPS didn't work or I was at the gym)
+
+```
+
+
+
 ```{r}
 #| label: run-df-clean
 #| eval: false
