@@ -23,9 +23,20 @@ library(tidyverse)
 Load running data
 ```{r}
 #| label: running-data
+#| echo: false
+#| warning: false
+#| message: false
 
-link <- "https://ac99290b-5f34-47fc-8a68-12df7cf8882c.usrfiles.com/ugd/4f27c5_1945c1c7da814fff9505e1242df146db.txt"
+url <- "https://ac99290b-5f34-47fc-8a68-12df7cf8882c.usrfiles.com/ugd/4f27c5_1945c1c7da814fff9505e1242df146db.txt"
 
-run_2024 <- read_table(link, skip = 5)
+
+raw_lines <- read_lines(url)
+
+## only extract where the data begins
+clean_lines <- raw_lines[7:263] 
+
+## read lines as a table
+run_df <- read_table(clean_lines,
+                     col_names = c("Place","Division Ranking","Number", "Full Name", "Age", "Sex", "City", "State", "Time", "Pace"))
 ```
 
