@@ -4,17 +4,22 @@ author: "Patrick Torralba"
 format:
   html:
     theme: flatly
-    embed-resources: true
-    toc: true
-    smooth-scroll: true
-    number-sections: true
+    code-fold: FALSE
+    code-tools: TRUE
+    code-copy: TRUE
+    toc: TRUE
+    toc-depth: 4
+    smooth-scroll: TRUE
+    embed-resources: TRUE
+    fig-align: center
 editor: visual
 ---
 
-# Research Question: Did my former roommate statistically significantly stress me out?
+# Research Question: Did my former roommate give me stress that is statistically significant?
 
+# Set-up
 
-# Set-up: Library + Load Data
+## Library
 ```{r}
 #| label: library
 #| message: false
@@ -26,8 +31,13 @@ library(readxl) ## load data
 library(lubridate) ## clean date columns
 library(gtsummary) ## make nice tables
 library(gt) ## make table 1
+library(tidymodels) ## make linear reg model
+
+
 ```
 
+
+## Load Data
 ```{r}
 #| label: load-data
 #| warning: false
@@ -41,6 +51,7 @@ avg_stress <- read_excel("stress_data_avg.xlsx")
 # Data Wrangling
 
 ## Data Cleaning
+
 ```{r}
 #| label: df-clean
 #| warning: false
@@ -52,29 +63,31 @@ avg_stress_clean <- avg_stress %>%
   filter(!is.na(Avg)) %>% ## remove NA values  
   mutate(
     start_date_text = str_extract(Date, "^[^-]+"),
-    year = if_else(str_detect(Date, "2025"), "2025", "2026")) %>% 
-  mutate(
-    start_date_text_v2 = str_extract(start_date_text, "^[^,]+")   ## ensure that all date rows do not have a year 
-  ) %>% 
-  mutate(
-    date = paste(start_date_text_v2, year) ## TLDR: I reduced the Date column to the first listed month-day and separated the year. I needed to do this to create a clean_date column for R to recognize
-  ) %>%
-  mutate(
+    year = if_else(str_detect(Date, "2025"), "2025", "2026"),
+    start_date_text_v2 = str_extract(start_date_text, "^[^,]+"),   ## ensure that all date rows do not have a year 
+    date = paste(start_date_text_v2, year), ## TLDR: I reduced the Date column to the first listed month-day and separated the year. I needed to do this to create a clean_date column for R to recognize
     clean_date = mdy(date),
-  ) %>%
-  mutate(
     roommate_status = case_when(clean_date <= ymd("2025-09-15") ~ "Pre-roommate",
                                 clean_date >= ymd("2025-09-16") & clean_date <= ymd("2026-03-20") ~ "Roommate",
                                 clean_date >= ymd("2025-03-21") ~ "Post-roommate"
+    ),
+    stressful_event = case_when(
+      clean_date >= ymd("2025-07-08") & 
+      clean_date <= ymd("2025-07-24") ~ "Yes",
+      clean_date >= ymd("2025-09-05") &
+      clean_date <= ymd("2025-09-16") ~ "Yes",
+      clean_date >= ymd("2025-12-12") &
+      clean_date <= ymd("2025-12-18") ~ "Yes"
     )
   ) %>% 
-  select(clean_date, year, roommate_status, Avg) ## only keep what I need. Easier to read.
+  select(clean_date, year, roommate_status, stressful_event, Avg) ## only keep what I need. Easier to read.
 
 avg_stress_clean
 
 ```
 
 ## Descriptive Statistics
+
 ```{r}
 #| label: tbl-avg_stress_stats
 #| tbl-cap: "Patrick Stress Statistics: 2025-2026"
@@ -104,6 +117,9 @@ table_1
 ```
 
 # Data Visualization
+
+## Exploratory Plot
+
 ```{r}
 #| label: fig-stress-time-series
 #| fig-cap: "Patrick's Stress Levels in Chronological Order"
@@ -115,6 +131,34 @@ ggplot(avg_stress_clean, aes(x = clean_date, y = Avg, color = roommate_status)) 
        y = "Average Stress Levels",
        color = "Roommate Status",
        title = "Patrick's Average Stress Levels (2025-2026)")
+
+```
+
+
+## Communicative Plot
+
+```{r}
+#| label: fig-stress-roommate
+#| fig-cap: "caption"
+#| fig-cap-location: top
+
+ggplot(avg_stress_clean, aes(x = roommate_status, y = Avg, fill = roommate_status)) +
+  geom_col() +
+  labs(x = NULL,
+       y = "Average Stress Levels Summation",
+       fill = "Roommate Status",
+       title = "Summation of Average Stress Levels by Roommate Status") +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.ticks.x = element_blank())
+
+```
+
+# Modeling
+
+## Linear Regression Model
+
+```{r}
 
 ```
 
