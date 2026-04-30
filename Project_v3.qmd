@@ -15,11 +15,12 @@ format:
 editor: visual
 ---
 
-# Research Question: Did my former roommate give me stress that is statistically significant?
+# Research Question: Did my former roommate give me stress that is statistically significant? And, can we predict my stress levels in the near-future?
 
 # Set-up
 
 ## Library
+
 ```{r}
 #| label: library
 #| message: false
@@ -32,12 +33,17 @@ library(lubridate) ## clean date columns
 library(gtsummary) ## make nice tables
 library(gt) ## make table 1
 library(tidymodels) ## make linear reg model
+library(kableExtra) ## needed for tables
 
 
 ```
 
-
 ## Load Data
+
+My stress level data comes from my Garmin watch which I wear every day. I was able to download a .xlsx file containing my weekly average stress levels directly from Garmin.
+
+Please note, I do not wear the watch at night when I sleep, and thus, this data only reflects my stress levels when I am awake. Unfortunately, Garmin does not provide units to said stress levels and there are more limitations as noted in the @sec-garmin-limitations.
+
 ```{r}
 #| label: load-data
 #| warning: false
@@ -51,6 +57,12 @@ avg_stress <- read_excel("stress_data_avg.xlsx")
 # Data Wrangling
 
 ## Data Cleaning
+
+I subset the dataset into a new dataset, "avg_stress_clean", to ensure that the original dataset remains static in case something goes wrong and I need to compare values.
+
+I first cleaned the data by removing NA values from the stress column "Avg". I then cleaned the date column by extracting only the start of the week and pasting the year (e.g May 21, 2025).
+
+Three additional columns were created for analysis purposes: roommate_status, stressful_event and exam_season. Respectively, the first variable refers to my living arrangements with classes including pre-roommate \[living with family\], roommate, and post-roommate \[living by myself\]. The second variable includes non-academic stressful events that were an extreme source of frustration for me such as a flat tire, a missed paycheck, etc. Lastly, the third variable refers to academic stressors such as mid-terms and final exams.
 
 ```{r}
 #| label: df-clean
@@ -71,22 +83,29 @@ avg_stress_clean <- avg_stress %>%
                                 clean_date >= ymd("2025-09-16") & clean_date <= ymd("2026-03-20") ~ "Roommate",
                                 clean_date >= ymd("2025-03-21") ~ "Post-roommate"
     ),
+    roommate_status = factor(roommate_status, levels = c("Pre-roommate","Roommate","Post-roommate")),
     stressful_event = case_when(
-      clean_date >= ymd("2025-07-08") & 
-      clean_date <= ymd("2025-07-24") ~ "Yes",
-      clean_date >= ymd("2025-09-05") &
-      clean_date <= ymd("2025-09-16") ~ "Yes",
-      clean_date >= ymd("2025-12-12") &
-      clean_date <= ymd("2025-12-18") ~ "Yes"
+      clean_date >= ymd("2025-07-08") & clean_date <= ymd("2025-07-24") ~ "Yes",
+      clean_date >= ymd("2025-09-05") & clean_date <= ymd("2025-09-16") ~ "Yes",
+      .default = "No"
+    ),
+    exam_season = case_when(
+      clean_date >= ymd("2025-12-12") & clean_date <= ymd("2025-12-18") ~ "Yes", # F25 finals
+      clean_date >= ymd("2026-05-07") & clean_date <= ymd("2026-05-12") ~ "Yes", # S26 finals
+      clean_date >= ymd("2026-03-23") & clean_date <= ymd("2026-03-29") ~ "Yes", # S26 midterms
+      clean_date >= ymd("2025-10-20") & clean_date <= ymd("2025-10-24") ~ "Yes",  # F25 midterms
+      .default = "No"
     )
   ) %>% 
-  select(clean_date, year, roommate_status, stressful_event, Avg) ## only keep what I need. Easier to read.
+  select(clean_date, year, roommate_status, stressful_event, exam_season, Avg) ## only keep what I need. Easier to read.
 
 avg_stress_clean
 
 ```
 
 ## Descriptive Statistics
+
+I wanted to see what my averageminimum and maximum stress levels were by roommate status.
 
 ```{r}
 #| label: tbl-avg_stress_stats
@@ -120,6 +139,8 @@ table_1
 
 ## Exploratory Plot
 
+This plot represents my stress level trends from mid-2025 to present day according to roommate status.
+
 ```{r}
 #| label: fig-stress-time-series
 #| fig-cap: "Patrick's Stress Levels in Chronological Order"
@@ -134,31 +155,151 @@ ggplot(avg_stress_clean, aes(x = clean_date, y = Avg, color = roommate_status)) 
 
 ```
 
-
 ## Communicative Plot
+
+This plot represents the cumulative average stress levels by roommate status and exam season.
 
 ```{r}
 #| label: fig-stress-roommate
-#| fig-cap: "caption"
+#| fig-cap: "Unadjusted Stress Levels"
 #| fig-cap-location: top
 
-ggplot(avg_stress_clean, aes(x = roommate_status, y = Avg, fill = roommate_status)) +
+ggplot(avg_stress_clean, aes(x = roommate_status, y = Avg, fill = exam_season)) +
   geom_col() +
   labs(x = NULL,
        y = "Average Stress Levels Summation",
-       fill = "Roommate Status",
-       title = "Summation of Average Stress Levels by Roommate Status") +
-  theme(axis.text.x = element_blank(),
-        axis.title.x = element_blank(),
-        axis.ticks.x = element_blank())
+       fill = "Exam Season",
+       title = "Summation of Average Stress Levels by Roommate Status and Exam Season") 
 
 ```
 
 # Modeling
 
-## Linear Regression Model
+## Adjusted Linear Regression Model
 
+### Data Split
+
+In this step, we define our data split with a random number generator. Specifically, 80% of the dataset is allocated for training and 20% is for testing.
 ```{r}
+#| label: data-split
+#| message: false
+#| warning: false
+#| echo: true  
+
+set.seed(123)
+
+data_split <- initial_split(avg_stress_clean, prop = 0.80)
+
+train_data <- training(data_split)
+
+test_data <- testing(data_split)
 
 ```
 
+### Define Continuous Prediction Model
+
+I define the model as a linear regression model.
+```{r}
+#| label: linear-model
+#| message: false
+#| warning: false
+#| echo: true  
+
+lm_spec <- linear_reg() %>% 
+  set_engine("lm") %>% 
+  set_mode("regression")
+```
+
+### Define Recipe
+
+In laymans terms, the recipe is defined as the following equation:
+
+$$
+\text{Average Stress Levels} = \beta_0 + (\beta_1 \times \text{Roommate Status}) + (\beta_2 \times \text{Stressful Event}) + (\beta_3 \times \text{Exam Season})
+$$
+In which my average stress levels are equivalent to my roommate status, stressful event, and exam seasons. I also introduce step variables to recipe such as converting nominal predictors into binary variables, standardize numeric data to have a mean of zero and standard deviation of one, and remove variables that have zero variance (e.g only 1 value).
+
+```{r}
+#| label: lm-recipe
+#| message: false
+#| warning: false
+#| echo: true  
+
+
+lm_recipe <- recipe(
+  Avg ~ roommate_status + stressful_event + exam_season,
+  data = train_data
+) %>% 
+  step_dummy(all_nominal_predictors()) %>% 
+  step_normalize(all_predictors()) %>% 
+  step_zv(all_predictors())
+```
+
+### Combine into Workflow
+
+The workflow step is a container object that bundles the model and recipe together.
+```{r}
+#| label: workflow
+#| message: false
+#| warning: false
+#| echo: true  
+
+lm_workflow <- workflow() %>% 
+  add_model(lm_spec) %>% 
+  add_recipe(lm_recipe)
+
+```
+
+### Fit Model
+
+In this step, we let the model learn by feeding it the training data (e.g that 80% we allocated). The tidy step is to create a clean tibble.
+```{r}
+#| label: fit-model
+#| message: false
+#| warning: false
+#| echo: true  
+
+
+lm_fit <- fit(lm_workflow, data = train_data)
+
+extract_fit_parsnip(lm_fit) %>% tidy()
+```
+
+### Evaluate Performance
+
+Finally, we evaluate our model's performance by using test data and by checking the metrics. We want to ensure that our model didn't just simply memorize the training data, but can actually predict stress levels using new values. Essentially we are comparing our predicted stress levels to the actual data.
+
+```{r}
+#| label: eval-lm-model-performance
+#| message: false
+#| warning: false
+#| echo: true  
+
+
+# Make predictions
+results <- predict(lm_fit, new_data = test_data) %>%
+  bind_cols(test_data)
+
+# Check metrics
+metrics <- metrics(results, truth = Avg, estimate = .pred)
+
+
+metrics %>% 
+  kable(
+    format = "html",
+    caption = "Linear Regression Model Performance",
+    digits = 3) %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE,
+    position = "left"
+  )
+```
+
+## Conclusion
+According to our results,, 
+
+
+## Limitations  {#sec-garmin-limitations}
+
+As noted earlier, there are limitations to this analysis. The biggest confounder and limitation of the Garmin watch itself is that it cannot differentiate between positive excitement and negative anxiety, both of which can increase stress levels. Therefore, it is entirely possible that those instances I was stressed may just be me feeling extremely excited (e.g spending time with family).
