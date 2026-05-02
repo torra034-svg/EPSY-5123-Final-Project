@@ -95,9 +95,16 @@ avg_stress_clean <- avg_stress %>%
       clean_date >= ymd("2026-03-23") & clean_date <= ymd("2026-03-29") ~ "Yes", # S26 midterms
       clean_date >= ymd("2025-10-20") & clean_date <= ymd("2025-10-24") ~ "Yes",  # F25 midterms
       .default = "No"
+    ),
+    graduate_school = case_when(clean_date >= ymd("2025-09-02") ~ "Yes", .default = "No"), # grad school start,
+    academic_break = case_when(
+      clean_date >= ymd("2025-11-27") & clean_date <= ymd("2025-11-30") ~ "Yes", # Thanksgiving break
+      clean_date >= ymd("2025-12-18") & clean_date <= ymd("2026-01-20") ~ "Yes", # Winter break
+      clean_date >= ymd("2026-03-12") & clean_date <= ymd("2026-03-15") ~ "Yes", # Spring break
+      .default = "No"
     )
   ) %>% 
-  select(clean_date, year, roommate_status, stressful_event, exam_season, Avg) ## only keep what I need. Easier to read.
+  select(clean_date, year, roommate_status, stressful_event, graduate_school, exam_season, academic_break, Avg) ## only keep what I need. Easier to read.
 
 avg_stress_clean
 
@@ -105,7 +112,7 @@ avg_stress_clean
 
 ## Descriptive Statistics
 
-I wanted to see what my averageminimum and maximum stress levels were by roommate status.
+I wanted to see what my average minimum and maximum stress levels were by roommate status.
 
 ```{r}
 #| label: tbl-avg_stress_stats
@@ -141,6 +148,8 @@ table_1
 
 This plot represents my stress level trends from mid-2025 to present day according to roommate status.
 
+It is interesting to note that my stress levels appear to dip once I move away from my roommate.
+
 ```{r}
 #| label: fig-stress-time-series
 #| fig-cap: "Patrick's Stress Levels in Chronological Order"
@@ -157,7 +166,7 @@ ggplot(avg_stress_clean, aes(x = clean_date, y = Avg, color = roommate_status)) 
 
 ## Communicative Plot
 
-This plot represents the cumulative average stress levels by roommate status and exam season.
+This plot represents the cumulative average stress levels by roommate status and exam season. It appears that my stress levels are similar when comparing stress levels during exam seasons.
 
 ```{r}
 #| label: fig-stress-roommate
@@ -180,6 +189,7 @@ ggplot(avg_stress_clean, aes(x = roommate_status, y = Avg, fill = exam_season)) 
 ### Data Split
 
 In this step, we define our data split with a random number generator. Specifically, 80% of the dataset is allocated for training and 20% is for testing.
+
 ```{r}
 #| label: data-split
 #| message: false
@@ -199,6 +209,7 @@ test_data <- testing(data_split)
 ### Define Continuous Prediction Model
 
 I define the model as a linear regression model.
+
 ```{r}
 #| label: linear-model
 #| message: false
@@ -216,8 +227,7 @@ In laymans terms, the recipe is defined as the following equation:
 
 $$
 \text{Average Stress Levels} = \beta_0 + (\beta_1 \times \text{Roommate Status}) + (\beta_2 \times \text{Stressful Event}) + (\beta_3 \times \text{Exam Season})
-$$
-In which my average stress levels are equivalent to my roommate status, stressful event, and exam seasons. I also introduce step variables to recipe such as converting nominal predictors into binary variables, standardize numeric data to have a mean of zero and standard deviation of one, and remove variables that have zero variance (e.g only 1 value).
+$$ In which my average stress levels are equivalent to my roommate status, stressful event, and exam seasons. I also introduce step variables to recipe such as converting nominal predictors into binary variables, standardize numeric data to have a mean of zero and standard deviation of one, and remove variables that have zero variance (e.g only 1 value).
 
 ```{r}
 #| label: lm-recipe
@@ -227,7 +237,7 @@ In which my average stress levels are equivalent to my roommate status, stressfu
 
 
 lm_recipe <- recipe(
-  Avg ~ roommate_status + stressful_event + exam_season,
+  Avg ~ roommate_status + stressful_event + graduate_school + exam_season + academic_break,
   data = train_data
 ) %>% 
   step_dummy(all_nominal_predictors()) %>% 
@@ -238,6 +248,7 @@ lm_recipe <- recipe(
 ### Combine into Workflow
 
 The workflow step is a container object that bundles the model and recipe together.
+
 ```{r}
 #| label: workflow
 #| message: false
@@ -253,6 +264,7 @@ lm_workflow <- workflow() %>%
 ### Fit Model
 
 In this step, we let the model learn by feeding it the training data (e.g that 80% we allocated). The tidy step is to create a clean tibble.
+
 ```{r}
 #| label: fit-model
 #| message: false
@@ -297,9 +309,13 @@ metrics %>%
 ```
 
 ## Conclusion
-According to our results,, 
 
+According to our evaluative performance results, we have an R-squared value of 0.659, mean absolute error (mae) of 3.856, and a root mean squared error (rmse) of 4.714. In other words, my model can explain \~65.9% of my average stress levels and thus, my model is a moderate-to-strong fit. The mae means that my model is off by about 3.9 stress level units. And, the rmse suggests that there's a few instances where my model performed poorly (e.g had really large residuals).
 
-## Limitations  {#sec-garmin-limitations}
+To conclude, my model is only 65.9% accurate in determining my near-future average stress levels. Further research would need to done to adjust for correlating variables such as average stress levels and weeks I was in an academic setting.
+
+## Limitations {#sec-garmin-limitations}
 
 As noted earlier, there are limitations to this analysis. The biggest confounder and limitation of the Garmin watch itself is that it cannot differentiate between positive excitement and negative anxiety, both of which can increase stress levels. Therefore, it is entirely possible that those instances I was stressed may just be me feeling extremely excited (e.g spending time with family).
+
+Another significant limitation of this analysis is that I only have roughly 6 weeks of post-roommate stress level data.
