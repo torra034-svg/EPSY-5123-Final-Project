@@ -3341,7 +3341,7 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#research-question-did-my-former-roommate-give-me-stress-that-is-statistically-significant-and-can-we-predict-my-stress-levels-in-the-near-future" id="toc-research-question-did-my-former-roommate-give-me-stress-that-is-statistically-significant-and-can-we-predict-my-stress-levels-in-the-near-future" class="nav-link active" data-scroll-target="#research-question-did-my-former-roommate-give-me-stress-that-is-statistically-significant-and-can-we-predict-my-stress-levels-in-the-near-future">Research Question: Did my former roommate give me stress that is statistically significant? And, can we predict my stress levels in the near-future?</a></li>
+  <li><a href="#research-question-can-we-predict-my-stress-levels-in-the-near-future" id="toc-research-question-can-we-predict-my-stress-levels-in-the-near-future" class="nav-link active" data-scroll-target="#research-question-can-we-predict-my-stress-levels-in-the-near-future">Research Question: Can we predict my stress levels in the near-future?</a></li>
   <li><a href="#set-up" id="toc-set-up" class="nav-link" data-scroll-target="#set-up">Set-up</a>
   <ul>
   <li><a href="#library" id="toc-library" class="nav-link" data-scroll-target="#library">Library</a></li>
@@ -3349,7 +3349,10 @@ window.Quarto = {
   </ul></li>
   <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">Data Wrangling</a>
   <ul>
-  <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link" data-scroll-target="#data-cleaning">Data Cleaning</a></li>
+  <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link" data-scroll-target="#data-cleaning">Data Cleaning</a>
+  <ul class="collapse">
+  <li><a href="#sec-stress-variables" id="toc-sec-stress-variables" class="nav-link" data-scroll-target="#sec-stress-variables">Stress variables</a></li>
+  </ul></li>
   <li><a href="#descriptive-statistics" id="toc-descriptive-statistics" class="nav-link" data-scroll-target="#descriptive-statistics">Descriptive Statistics</a></li>
   </ul></li>
   <li><a href="#data-visualization" id="toc-data-visualization" class="nav-link" data-scroll-target="#data-visualization">Data Visualization</a>
@@ -3368,8 +3371,11 @@ window.Quarto = {
   <li><a href="#fit-model" id="toc-fit-model" class="nav-link" data-scroll-target="#fit-model">Fit Model</a></li>
   <li><a href="#evaluate-performance" id="toc-evaluate-performance" class="nav-link" data-scroll-target="#evaluate-performance">Evaluate Performance</a></li>
   </ul></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#interpretation-and-reflection" id="toc-interpretation-and-reflection" class="nav-link" data-scroll-target="#interpretation-and-reflection">Interpretation and Reflection</a>
+  <ul class="collapse">
   <li><a href="#sec-garmin-limitations" id="toc-sec-garmin-limitations" class="nav-link" data-scroll-target="#sec-garmin-limitations">Limitations</a></li>
+  <li><a href="#reflection" id="toc-reflection" class="nav-link" data-scroll-target="#reflection">Reflection</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -3401,8 +3407,9 @@ window.Quarto = {
 </header>
 
 
-<section id="research-question-did-my-former-roommate-give-me-stress-that-is-statistically-significant-and-can-we-predict-my-stress-levels-in-the-near-future" class="level1">
-<h1>Research Question: Did my former roommate give me stress that is statistically significant? And, can we predict my stress levels in the near-future?</h1>
+<section id="research-question-can-we-predict-my-stress-levels-in-the-near-future" class="level1">
+<h1>Research Question: Can we predict my stress levels in the near-future?</h1>
+<p>To answer this question, we must account for variables that I believe influence my stress levels. These variables are mainly split into academic and non-academic stressors as noted in the <a href="#sec-stress-variables" class="quarto-xref">Section 3.1.1</a> portion.</p>
 </section>
 <section id="set-up" class="level1">
 <h1>Set-up</h1>
@@ -3421,7 +3428,7 @@ window.Quarto = {
 <section id="load-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-data">Load Data</h2>
 <p>My stress level data comes from my Garmin watch which I wear every day. I was able to download a .xlsx file containing my weekly average stress levels directly from Garmin.</p>
-<p>Please note, I do not wear the watch at night when I sleep, and thus, this data only reflects my stress levels when I am awake. Unfortunately, Garmin does not provide units to said stress levels and there are more limitations as noted in the <a href="#sec-garmin-limitations" class="quarto-xref">Section 5.3</a>.</p>
+<p>Please note, I do not wear the watch at night when I sleep, and thus, this data only reflects my stress levels when I am awake. Unfortunately, Garmin does not provide units to said stress levels and there are more limitations as noted in the <a href="#sec-garmin-limitations" class="quarto-xref">Section 5.2.1</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>avg_stress <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;stress_data_avg.xlsx&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -3433,7 +3440,10 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="data-cleaning">Data Cleaning</h2>
 <p>I subset the dataset into a new dataset, “avg_stress_clean”, to ensure that the original dataset remains static in case something goes wrong and I need to compare values.</p>
 <p>I first cleaned the data by removing NA values from the stress column “Avg”. I then cleaned the date column by extracting only the start of the week and pasting the year (e.g May 21, 2025).</p>
-<p>Three additional columns were created for analysis purposes: roommate_status, stressful_event and exam_season. Respectively, the first variable refers to my living arrangements with classes including pre-roommate [living with family], roommate, and post-roommate [living by myself]. The second variable includes non-academic stressful events that were an extreme source of frustration for me such as a flat tire, a missed paycheck, etc. Lastly, the third variable refers to academic stressors such as mid-terms and final exams.</p>
+<section id="sec-stress-variables" class="level3">
+<h3 class="anchored" data-anchor-id="sec-stress-variables">Stress variables</h3>
+<p>Additional columns were created for analysis purposes: roommate_status, stressful_event, exam_season, graduate_school, and academic_break. Respectively, the first variable refers to my living arrangements including pre-roommate [living with family], roommate, and post-roommate [living by myself]. The second variable includes non-academic stressful events that were an extreme source of frustration for me such as a flat tire, a missed paycheck, etc. Lastly, the third variable refers to academic stressors such as mid-terms and final exams.</p>
+<p>graduate_school refers to my time in graduate school occurring anytime after September 9th, 2025. academic_break refers to the UMN academic breaks such as Thanksgiving, Winter break, etc.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>avg_stress_clean <span class="ot">&lt;-</span> avg_stress <span class="sc">%&gt;%</span> </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Avg)) <span class="sc">%&gt;%</span> <span class="do">## remove NA values  </span></span>
@@ -3459,28 +3469,37 @@ window.Quarto = {
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-03-23&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-03-29&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="co"># S26 midterms</span></span>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-10-20&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-10-24&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>,  <span class="co"># F25 midterms</span></span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">.default =</span> <span class="st">&quot;No&quot;</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(clean_date, year, roommate_status, stressful_event, exam_season, Avg) <span class="do">## only keep what I need. Easier to read.</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>avg_stress_clean</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">graduate_school =</span> <span class="fu">case_when</span>(clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-09-02&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="at">.default =</span> <span class="st">&quot;No&quot;</span>), <span class="co"># grad school start,</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">academic_break =</span> <span class="fu">case_when</span>(</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-11-27&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-11-30&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="co"># Thanksgiving break</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-12-18&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-01-20&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="co"># Winter break</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-03-12&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-03-15&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="co"># Spring break</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">.default =</span> <span class="st">&quot;No&quot;</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(clean_date, year, roommate_status, stressful_event, graduate_school, exam_season, academic_break, Avg) <span class="do">## only keep what I need. Easier to read.</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>avg_stress_clean</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 55 × 6
-   clean_date year  roommate_status stressful_event exam_season   Avg
-   &lt;date&gt;     &lt;chr&gt; &lt;fct&gt;           &lt;chr&gt;           &lt;chr&gt;       &lt;dbl&gt;
- 1 2026-04-21 2026  Post-roommate   No              No             59
- 2 2026-04-13 2026  Post-roommate   No              No             55
- 3 2026-04-06 2026  Post-roommate   No              No             57
- 4 2026-03-29 2026  Post-roommate   No              Yes            48
- 5 2026-03-22 2026  Post-roommate   No              No             46
- 6 2026-03-15 2026  Roommate        No              No             52
- 7 2026-03-08 2026  Roommate        No              No             60
- 8 2026-03-01 2026  Roommate        No              No             47
- 9 2026-02-22 2026  Roommate        No              No             51
-10 2026-02-15 2026  Roommate        No              No             63
-# ℹ 45 more rows</code></pre>
+<pre><code># A tibble: 55 × 8
+   clean_date year  roommate_status stressful_event graduate_school exam_season
+   &lt;date&gt;     &lt;chr&gt; &lt;fct&gt;           &lt;chr&gt;           &lt;chr&gt;           &lt;chr&gt;      
+ 1 2026-04-21 2026  Post-roommate   No              Yes             No         
+ 2 2026-04-13 2026  Post-roommate   No              Yes             No         
+ 3 2026-04-06 2026  Post-roommate   No              Yes             No         
+ 4 2026-03-29 2026  Post-roommate   No              Yes             Yes        
+ 5 2026-03-22 2026  Post-roommate   No              Yes             No         
+ 6 2026-03-15 2026  Roommate        No              Yes             No         
+ 7 2026-03-08 2026  Roommate        No              Yes             No         
+ 8 2026-03-01 2026  Roommate        No              Yes             No         
+ 9 2026-02-22 2026  Roommate        No              Yes             No         
+10 2026-02-15 2026  Roommate        No              Yes             No         
+# ℹ 45 more rows
+# ℹ 2 more variables: academic_break &lt;chr&gt;, Avg &lt;dbl&gt;</code></pre>
 </div>
 </div>
+</section>
 </section>
 <section id="descriptive-statistics" class="level2">
 <h2 class="anchored" data-anchor-id="descriptive-statistics">Descriptive Statistics</h2>
@@ -3509,20 +3528,20 @@ Table 1: Patrick Stress Statistics: 2025-2026
 </figcaption>
 <div aria-describedby="tbl-avg_stress_stats-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="fecseebhiu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#fecseebhiu table {
+<div id="hynbwpkpkj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hynbwpkpkj table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#fecseebhiu thead, #fecseebhiu tbody, #fecseebhiu tfoot, #fecseebhiu tr, #fecseebhiu td, #fecseebhiu th {
+#hynbwpkpkj thead, #hynbwpkpkj tbody, #hynbwpkpkj tfoot, #hynbwpkpkj tr, #hynbwpkpkj td, #hynbwpkpkj th {
 border-style: none;
 }
-#fecseebhiu p {
+#hynbwpkpkj p {
 margin: 0;
 padding: 0;
 }
-#fecseebhiu .gt_table {
+#hynbwpkpkj .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -3547,11 +3566,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#fecseebhiu .gt_caption {
+#hynbwpkpkj .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#fecseebhiu .gt_title {
+#hynbwpkpkj .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -3562,7 +3581,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#fecseebhiu .gt_subtitle {
+#hynbwpkpkj .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -3573,7 +3592,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#fecseebhiu .gt_heading {
+#hynbwpkpkj .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -3584,12 +3603,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#fecseebhiu .gt_bottom_border {
+#hynbwpkpkj .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#fecseebhiu .gt_col_headings {
+#hynbwpkpkj .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3603,7 +3622,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#fecseebhiu .gt_col_heading {
+#hynbwpkpkj .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3622,7 +3641,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#fecseebhiu .gt_column_spanner_outer {
+#hynbwpkpkj .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3633,13 +3652,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#fecseebhiu .gt_column_spanner_outer:first-child {
+#hynbwpkpkj .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#fecseebhiu .gt_column_spanner_outer:last-child {
+#hynbwpkpkj .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#fecseebhiu .gt_column_spanner {
+#hynbwpkpkj .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -3650,10 +3669,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#fecseebhiu .gt_spanner_row {
+#hynbwpkpkj .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#fecseebhiu .gt_group_heading {
+#hynbwpkpkj .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3678,7 +3697,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#fecseebhiu .gt_empty_group_heading {
+#hynbwpkpkj .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -3692,13 +3711,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#fecseebhiu .gt_from_md > :first-child {
+#hynbwpkpkj .gt_from_md > :first-child {
 margin-top: 0;
 }
-#fecseebhiu .gt_from_md > :last-child {
+#hynbwpkpkj .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#fecseebhiu .gt_row {
+#hynbwpkpkj .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3716,7 +3735,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#fecseebhiu .gt_stub {
+#hynbwpkpkj .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3728,7 +3747,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#fecseebhiu .gt_stub_row_group {
+#hynbwpkpkj .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3741,13 +3760,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#fecseebhiu .gt_row_group_first td {
+#hynbwpkpkj .gt_row_group_first td {
 border-top-width: 2px;
 }
-#fecseebhiu .gt_row_group_first th {
+#hynbwpkpkj .gt_row_group_first th {
 border-top-width: 2px;
 }
-#fecseebhiu .gt_summary_row {
+#hynbwpkpkj .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3756,14 +3775,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#fecseebhiu .gt_first_summary_row {
+#hynbwpkpkj .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#fecseebhiu .gt_first_summary_row.thick {
+#hynbwpkpkj .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#fecseebhiu .gt_last_summary_row {
+#hynbwpkpkj .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3772,7 +3791,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#fecseebhiu .gt_grand_summary_row {
+#hynbwpkpkj .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3781,7 +3800,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#fecseebhiu .gt_first_grand_summary_row {
+#hynbwpkpkj .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3790,7 +3809,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#fecseebhiu .gt_last_grand_summary_row_top {
+#hynbwpkpkj .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3799,10 +3818,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#fecseebhiu .gt_striped {
+#hynbwpkpkj .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#fecseebhiu .gt_table_body {
+#hynbwpkpkj .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3810,7 +3829,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#fecseebhiu .gt_footnotes {
+#hynbwpkpkj .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3823,7 +3842,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#fecseebhiu .gt_footnote {
+#hynbwpkpkj .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -3831,7 +3850,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#fecseebhiu .gt_sourcenotes {
+#hynbwpkpkj .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3844,64 +3863,64 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#fecseebhiu .gt_sourcenote {
+#hynbwpkpkj .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#fecseebhiu .gt_left {
+#hynbwpkpkj .gt_left {
 text-align: left;
 }
-#fecseebhiu .gt_center {
+#hynbwpkpkj .gt_center {
 text-align: center;
 }
-#fecseebhiu .gt_right {
+#hynbwpkpkj .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#fecseebhiu .gt_font_normal {
+#hynbwpkpkj .gt_font_normal {
 font-weight: normal;
 }
-#fecseebhiu .gt_font_bold {
+#hynbwpkpkj .gt_font_bold {
 font-weight: bold;
 }
-#fecseebhiu .gt_font_italic {
+#hynbwpkpkj .gt_font_italic {
 font-style: italic;
 }
-#fecseebhiu .gt_super {
+#hynbwpkpkj .gt_super {
 font-size: 65%;
 }
-#fecseebhiu .gt_footnote_marks {
+#hynbwpkpkj .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#fecseebhiu .gt_asterisk {
+#hynbwpkpkj .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#fecseebhiu .gt_indent_1 {
+#hynbwpkpkj .gt_indent_1 {
 text-indent: 5px;
 }
-#fecseebhiu .gt_indent_2 {
+#hynbwpkpkj .gt_indent_2 {
 text-indent: 10px;
 }
-#fecseebhiu .gt_indent_3 {
+#hynbwpkpkj .gt_indent_3 {
 text-indent: 15px;
 }
-#fecseebhiu .gt_indent_4 {
+#hynbwpkpkj .gt_indent_4 {
 text-indent: 20px;
 }
-#fecseebhiu .gt_indent_5 {
+#hynbwpkpkj .gt_indent_5 {
 text-indent: 25px;
 }
-#fecseebhiu .katex-display {
+#hynbwpkpkj .katex-display {
 display: inline-flex !important;
 margin-bottom: 0.75em !important;
 }
-#fecseebhiu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#hynbwpkpkj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
 height: 0px !important;
 }
 </style>
@@ -4000,6 +4019,7 @@ Figure 2: Unadjusted Stress Levels
 <h1>Modeling</h1>
 <section id="adjusted-linear-regression-model" class="level2">
 <h2 class="anchored" data-anchor-id="adjusted-linear-regression-model">Adjusted Linear Regression Model</h2>
+<p>I create a continuous prediction model because I want to predict my stress levels (e.g a numeric value) based on the presence of certain variables (e.g exam season vs no exam season).</p>
 <section id="data-split" class="level3">
 <h3 class="anchored" data-anchor-id="data-split">Data Split</h3>
 <p>In this step, we define our data split with a random number generator. Specifically, 80% of the dataset is allocated for training and 20% is for testing.</p>
@@ -4026,16 +4046,27 @@ Figure 2: Unadjusted Stress Levels
 <h3 class="anchored" data-anchor-id="define-recipe">Define Recipe</h3>
 <p>In laymans terms, the recipe is defined as the following equation:</p>
 <p><span class="math display">\[
-\text{Average Stress Levels} = \beta_0 + (\beta_1 \times \text{Roommate Status}) + (\beta_2 \times \text{Stressful Event}) + (\beta_3 \times \text{Exam Season})
-\]</span> In which my average stress levels are equivalent to my roommate status, stressful event, and exam seasons. I also introduce step variables to recipe such as converting nominal predictors into binary variables, standardize numeric data to have a mean of zero and standard deviation of one, and remove variables that have zero variance (e.g only 1 value).</p>
+\begin{split}
+\text{Average Stress Levels} = \beta_0 \\  +
+(\beta_1 \times \text{Roommate Status}) \\ +
+(\beta_2 \times \text{Stressful Event}) \\ +
+(\beta_3 \times \text{Exam Season}) \\ +
+(\beta_4 \times \text{Graduate School}) \\ +
+(\beta_5 \times \text{Academic Break})
+\end{split}
+\]</span> In which my average stress levels are equivalent to my roommate status, stressful event, exam season, graduate school and academic breaks.</p>
+<p>I also introduce step variables to recipe such as converting nominal predictors into binary variables, standardize numeric data to have a mean of zero and standard deviation of one, adjusting for the interaction effect between the roommate status coinciding with graduate school timing, and remove variables that have zero variance (e.g only 1 value).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lm_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  Avg <span class="sc">~</span> roommate_status <span class="sc">+</span> stressful_event <span class="sc">+</span> exam_season,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  Avg <span class="sc">~</span> roommate_status <span class="sc">+</span> stressful_event <span class="sc">+</span> graduate_school <span class="sc">+</span> exam_season <span class="sc">+</span> academic_break,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train_data</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">%&gt;%</span> <span class="do">## make categorical variables into binary</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_interact</span>(<span class="at">terms =</span> <span class="sc">~</span> <span class="fu">starts_with</span>(<span class="st">&quot;roommate_status&quot;</span>)<span class="sc">:</span><span class="fu">starts_with</span>(<span class="st">&quot;graduate_school&quot;</span>)) <span class="sc">%&gt;%</span>  <span class="co"># create interaction effect between roommate status and graduate school</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>()) <span class="sc">%&gt;%</span>  <span class="do">## remove zero variance predictors</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_lincomb</span>(<span class="fu">all_predictors</span>()) <span class="sc">%&gt;%</span>  </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_corr</span>(<span class="fu">all_predictors</span>(), <span class="at">threshold =</span> <span class="fl">0.9</span>) <span class="do">## remove perfectly correlated variables</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="combine-into-workflow" class="level3">
@@ -4055,14 +4086,16 @@ Figure 2: Unadjusted Stress Levels
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">extract_fit_parsnip</span>(lm_fit) <span class="sc">%&gt;%</span> <span class="fu">tidy</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5 × 5
-  term                          estimate std.error statistic  p.value
-  &lt;chr&gt;                            &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-1 (Intercept)                     51.1       0.964    53.0   5.87e-38
-2 roommate_status_Roommate         6.09      1.08      5.64  1.61e- 6
-3 roommate_status_Post.roommate    2.07      1.11      1.87  6.86e- 2
-4 stressful_event_Yes              0.976     1.01      0.962 3.42e- 1
-5 exam_season_Yes                  0.432     1.03      0.419 6.78e- 1</code></pre>
+<pre><code># A tibble: 7 × 5
+  term                                    estimate std.error statistic   p.value
+  &lt;chr&gt;                                      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)                               51.1       0.973    52.6    4.30e-37
+2 roommate_status_Roommate                   5.87      1.15      5.11   9.34e- 6
+3 roommate_status_Post.roommate              2.05      1.12      1.84   7.36e- 2
+4 stressful_event_Yes                        0.976     1.02      0.954  3.46e- 1
+5 exam_season_Yes                            0.484     1.04      0.463  6.46e- 1
+6 academic_break_Yes                         0.615     1.05      0.585  5.62e- 1
+7 roommate_status_Roommate_x_graduate_sc…   NA        NA        NA     NA       </code></pre>
 </div>
 </div>
 </section>
@@ -4103,17 +4136,17 @@ Figure 2: Unadjusted Stress Levels
 <tr class="odd">
 <td style="text-align: left;">rmse</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">4.714</td>
+<td style="text-align: right;">4.723</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">rsq</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.659</td>
+<td style="text-align: right;">0.636</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">mae</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">3.856</td>
+<td style="text-align: right;">3.884</td>
 </tr>
 </tbody>
 </table>
@@ -4124,16 +4157,22 @@ Figure 2: Unadjusted Stress Levels
 </div>
 </section>
 </section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>According to our evaluative performance results, we have an R-squared value of 0.659</p>
-</section>
-<section id="sec-garmin-limitations" class="level2">
-<h2 class="anchored" data-anchor-id="sec-garmin-limitations">Limitations</h2>
+<section id="interpretation-and-reflection" class="level2">
+<h2 class="anchored" data-anchor-id="interpretation-and-reflection">Interpretation and Reflection</h2>
+<p>According to our evaluative performance results, we have an R-squared value of 0.636, mean absolute error (mae) of 3.884, and a root mean squared error (rmse) of 4.723 In other words, my model can explain ~63.6% of my average stress levels and thus, my model is a moderate-to-strong fit. The mae means that my model is off by about 3.9 stress level units. And, the rmse suggests that there’s a few instances where my model performed poorly (e.g had really large residuals).</p>
+<p>To conclude, my model is only 63.6% accurate in determining my near-future average stress levels.</p>
+<section id="sec-garmin-limitations" class="level3">
+<h3 class="anchored" data-anchor-id="sec-garmin-limitations">Limitations</h3>
 <p>As noted earlier, there are limitations to this analysis. The biggest confounder and limitation of the Garmin watch itself is that it cannot differentiate between positive excitement and negative anxiety, both of which can increase stress levels. Therefore, it is entirely possible that those instances I was stressed may just be me feeling extremely excited (e.g spending time with family).</p>
-<p>Another significant limitation of this analysis is that I only have roughly 6 weeks of post-roommate stress level data.</p>
+<p>Another significant limitation of this analysis is that I only have roughly 6 weeks of post-roommate stress level data, whereas, I have several months of pre-roommate and roommate data. Therefore, more post-roommate stress levels data need to be collected to create a more accurate model.</p>
+<p>I also recommend conducting tests to determine if highly correlated variables could be artificially inflating the R-squared value.</p>
+</section>
+<section id="reflection" class="level3">
+<h3 class="anchored" data-anchor-id="reflection">Reflection</h3>
+<p>Throughout this project, I learned how to make and train a linear regression! I thought this project was really interesting because I could define stressors, account for said stressors (e.g step_corr to remove highly correlated variables), and interpret these findings. I thought this was a cool way to actually apply what I’m learning in statistics to a tangible opportunity.</p>
 <!-- -->
 
+</section>
 </section>
 </section>
 
@@ -4616,301 +4655,336 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="an">editor:</span><span class="co"> visual</span></span>
 <span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="fu"># Research Question: Did my former roommate give me stress that is statistically significant? And, can we predict my stress levels in the near-future?</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="fu"># Research Question: Can we predict my stress levels in the near-future?</span></span>
 <span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="fu"># Set-up</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>To answer this question, we must account for variables that I believe influence my stress levels. These variables are mainly split into academic and non-academic stressors as noted in the @sec-stress-variables portion.</span>
 <span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## Library</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="fu"># Set-up</span></span>
 <span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: library</span></span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl) <span class="do">## load data</span></span>
-<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate) <span class="do">## clean date columns</span></span>
-<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary) <span class="do">## make nice tables</span></span>
-<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="do">## make table 1</span></span>
-<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels) <span class="do">## make linear reg model</span></span>
-<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra) <span class="do">## needed for tables</span></span>
-<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Library</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: library</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl) <span class="do">## load data</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate) <span class="do">## clean date columns</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary) <span class="do">## make nice tables</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="do">## make table 1</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels) <span class="do">## make linear reg model</span></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra) <span class="do">## needed for tables</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a><span class="fu">## Load Data</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>My stress level data comes from my Garmin watch which I wear every day. I was able to download a .xlsx file containing my weekly average stress levels directly from Garmin.</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a><span class="fu">## Load Data</span></span>
 <span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>Please note, I do not wear the watch at night when I sleep, and thus, this data only reflects my stress levels when I am awake. Unfortunately, Garmin does not provide units to said stress levels and there are more limitations as noted in the @sec-garmin-limitations.</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>My stress level data comes from my Garmin watch which I wear every day. I was able to download a .xlsx file containing my weekly average stress levels directly from Garmin.</span>
 <span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: load-data</span></span>
-<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>avg_stress <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;stress_data_avg.xlsx&quot;</span>)</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>Please note, I do not wear the watch at night when I sleep, and thus, this data only reflects my stress levels when I am awake. Unfortunately, Garmin does not provide units to said stress levels and there are more limitations as noted in the @sec-garmin-limitations.</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: load-data</span></span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
 <span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>avg_stress <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;stress_data_avg.xlsx&quot;</span>)</span>
 <span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data Wrangling</span></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Cleaning</span></span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data Wrangling</span></span>
 <span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>I subset the dataset into a new dataset, &quot;avg_stress_clean&quot;, to ensure that the original dataset remains static in case something goes wrong and I need to compare values.</span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Cleaning </span></span>
 <span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>I first cleaned the data by removing NA values from the stress column &quot;Avg&quot;. I then cleaned the date column by extracting only the start of the week and pasting the year (e.g May 21, 2025).</span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>I subset the dataset into a new dataset, &quot;avg_stress_clean&quot;, to ensure that the original dataset remains static in case something goes wrong and I need to compare values.</span>
 <span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>Three additional columns were created for analysis purposes: roommate_status, stressful_event and exam_season. Respectively, the first variable refers to my living arrangements with classes including pre-roommate <span class="sc">\[</span>living with family<span class="sc">\]</span>, roommate, and post-roommate <span class="sc">\[</span>living by myself<span class="sc">\]</span>. The second variable includes non-academic stressful events that were an extreme source of frustration for me such as a flat tire, a missed paycheck, etc. Lastly, the third variable refers to academic stressors such as mid-terms and final exams.</span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>I first cleaned the data by removing NA values from the stress column &quot;Avg&quot;. I then cleaned the date column by extracting only the start of the week and pasting the year (e.g May 21, 2025).</span>
 <span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: df-clean</span></span>
-<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>avg_stress_clean <span class="ot">&lt;-</span> avg_stress <span class="sc">%&gt;%</span> </span>
-<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Avg)) <span class="sc">%&gt;%</span> <span class="do">## remove NA values  </span></span>
-<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_date_text =</span> <span class="fu">str_extract</span>(Date, <span class="st">&quot;^[^-]+&quot;</span>),</span>
-<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">if_else</span>(<span class="fu">str_detect</span>(Date, <span class="st">&quot;2025&quot;</span>), <span class="st">&quot;2025&quot;</span>, <span class="st">&quot;2026&quot;</span>),</span>
-<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_date_text_v2 =</span> <span class="fu">str_extract</span>(start_date_text, <span class="st">&quot;^[^,]+&quot;</span>),   <span class="do">## ensure that all date rows do not have a year </span></span>
-<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">paste</span>(start_date_text_v2, year), <span class="do">## TLDR: I reduced the Date column to the first listed month-day and separated the year. I needed to do this to create a clean_date column for R to recognize</span></span>
-<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">clean_date =</span> <span class="fu">mdy</span>(date),</span>
-<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">roommate_status =</span> <span class="fu">case_when</span>(clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-09-15&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Pre-roommate&quot;</span>,</span>
-<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a>                                clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-09-16&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-03-20&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Roommate&quot;</span>,</span>
-<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a>                                clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-03-21&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Post-roommate&quot;</span></span>
-<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">roommate_status =</span> <span class="fu">factor</span>(roommate_status, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Pre-roommate&quot;</span>,<span class="st">&quot;Roommate&quot;</span>,<span class="st">&quot;Post-roommate&quot;</span>)),</span>
-<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a>    <span class="at">stressful_event =</span> <span class="fu">case_when</span>(</span>
-<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-07-08&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-07-24&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>,</span>
-<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-09-05&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-09-16&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>,</span>
-<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">.default =</span> <span class="st">&quot;No&quot;</span></span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a><span class="fu">### Stress variables  {#sec-stress-variables}</span></span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a>Additional columns were created for analysis purposes: roommate_status, stressful_event, exam_season, graduate_school, and academic_break. Respectively, the first variable refers to my living arrangements including pre-roommate <span class="sc">\[</span>living with family<span class="sc">\]</span>, roommate, and post-roommate <span class="sc">\[</span>living by myself<span class="sc">\]</span>. The second variable includes non-academic stressful events that were an extreme source of frustration for me such as a flat tire, a missed paycheck, etc. Lastly, the third variable refers to academic stressors such as mid-terms and final exams.</span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a>graduate_school refers to my time in graduate school occurring anytime after September 9th, 2025. academic_break refers to the UMN academic breaks such as Thanksgiving, Winter break, etc.</span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: df-clean</span></span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a>avg_stress_clean <span class="ot">&lt;-</span> avg_stress <span class="sc">%&gt;%</span> </span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Avg)) <span class="sc">%&gt;%</span> <span class="do">## remove NA values  </span></span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_date_text =</span> <span class="fu">str_extract</span>(Date, <span class="st">&quot;^[^-]+&quot;</span>),</span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">if_else</span>(<span class="fu">str_detect</span>(Date, <span class="st">&quot;2025&quot;</span>), <span class="st">&quot;2025&quot;</span>, <span class="st">&quot;2026&quot;</span>),</span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_date_text_v2 =</span> <span class="fu">str_extract</span>(start_date_text, <span class="st">&quot;^[^,]+&quot;</span>),   <span class="do">## ensure that all date rows do not have a year </span></span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">paste</span>(start_date_text_v2, year), <span class="do">## TLDR: I reduced the Date column to the first listed month-day and separated the year. I needed to do this to create a clean_date column for R to recognize</span></span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a>    <span class="at">clean_date =</span> <span class="fu">mdy</span>(date),</span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">roommate_status =</span> <span class="fu">case_when</span>(clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-09-15&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Pre-roommate&quot;</span>,</span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a>                                clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-09-16&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-03-20&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Roommate&quot;</span>,</span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a>                                clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-03-21&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Post-roommate&quot;</span></span>
 <span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a>    <span class="at">exam_season =</span> <span class="fu">case_when</span>(</span>
-<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-12-12&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-12-18&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="co"># F25 finals</span></span>
-<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-05-07&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-05-12&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="co"># S26 finals</span></span>
-<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-03-23&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-03-29&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="co"># S26 midterms</span></span>
-<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-10-20&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-10-24&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>,  <span class="co"># F25 midterms</span></span>
-<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a>      <span class="at">.default =</span> <span class="st">&quot;No&quot;</span></span>
-<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(clean_date, year, roommate_status, stressful_event, exam_season, Avg) <span class="do">## only keep what I need. Easier to read.</span></span>
-<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a>avg_stress_clean</span>
-<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a><span class="fu">## Descriptive Statistics</span></span>
-<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a>I wanted to see what my average minimum and maximum stress levels were by roommate status.</span>
-<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-avg_stress_stats</span></span>
-<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: &quot;Patrick Stress Statistics: 2025-2026&quot;</span></span>
-<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap-location: top</span></span>
-<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a>table_1 <span class="ot">&lt;-</span> avg_stress_clean <span class="sc">%&gt;%</span> </span>
-<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(roommate_status) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">max_avg_stress =</span> <span class="fu">max</span>(Avg, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a>            <span class="at">min_avg_stress =</span> <span class="fu">min</span>(Avg, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
-<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Patrick&#39;s Stress Levels by Roommate Status&quot;</span></span>
-<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
-<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a>    <span class="at">roommate_status =</span> <span class="st">&quot;Roommate Status&quot;</span>,</span>
-<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_avg_stress =</span> <span class="st">&quot;Maximum Stress&quot;</span>,</span>
-<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_avg_stress =</span> <span class="st">&quot;Minimum Stress&quot;</span></span>
-<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a>  ) </span>
-<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a>table_1</span>
-<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data Visualization</span></span>
-<span id="cb15-147"><a href="#cb15-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-148"><a href="#cb15-148" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exploratory Plot</span></span>
-<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a>This plot represents my stress level trends from mid-2025 to present day according to roommate status.</span>
-<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a>It is interesting to note that my stress levels appear to dip once I move away from my roommate.</span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a>    <span class="at">roommate_status =</span> <span class="fu">factor</span>(roommate_status, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Pre-roommate&quot;</span>,<span class="st">&quot;Roommate&quot;</span>,<span class="st">&quot;Post-roommate&quot;</span>)),</span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">stressful_event =</span> <span class="fu">case_when</span>(</span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-07-08&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-07-24&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>,</span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-09-05&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-09-16&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>,</span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a>      <span class="at">.default =</span> <span class="st">&quot;No&quot;</span></span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a>    <span class="at">exam_season =</span> <span class="fu">case_when</span>(</span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-12-12&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-12-18&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="co"># F25 finals</span></span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-05-07&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-05-12&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="co"># S26 finals</span></span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-03-23&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-03-29&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="co"># S26 midterms</span></span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-10-20&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-10-24&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>,  <span class="co"># F25 midterms</span></span>
+<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a>      <span class="at">.default =</span> <span class="st">&quot;No&quot;</span></span>
+<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a>    <span class="at">graduate_school =</span> <span class="fu">case_when</span>(clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-09-02&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="at">.default =</span> <span class="st">&quot;No&quot;</span>), <span class="co"># grad school start,</span></span>
+<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a>    <span class="at">academic_break =</span> <span class="fu">case_when</span>(</span>
+<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-11-27&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-11-30&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="co"># Thanksgiving break</span></span>
+<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2025-12-18&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-01-20&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="co"># Winter break</span></span>
+<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a>      clean_date <span class="sc">&gt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-03-12&quot;</span>) <span class="sc">&amp;</span> clean_date <span class="sc">&lt;=</span> <span class="fu">ymd</span>(<span class="st">&quot;2026-03-15&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Yes&quot;</span>, <span class="co"># Spring break</span></span>
+<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a>      <span class="at">.default =</span> <span class="st">&quot;No&quot;</span></span>
+<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(clean_date, year, roommate_status, stressful_event, graduate_school, exam_season, academic_break, Avg) <span class="do">## only keep what I need. Easier to read.</span></span>
+<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a>avg_stress_clean</span>
+<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a><span class="fu">## Descriptive Statistics</span></span>
+<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a>I wanted to see what my average minimum and maximum stress levels were by roommate status.</span>
+<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-avg_stress_stats</span></span>
+<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: &quot;Patrick Stress Statistics: 2025-2026&quot;</span></span>
+<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap-location: top</span></span>
+<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a>table_1 <span class="ot">&lt;-</span> avg_stress_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(roommate_status) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">max_avg_stress =</span> <span class="fu">max</span>(Avg, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a>            <span class="at">min_avg_stress =</span> <span class="fu">min</span>(Avg, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Patrick&#39;s Stress Levels by Roommate Status&quot;</span></span>
+<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-147"><a href="#cb15-147" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb15-148"><a href="#cb15-148" aria-hidden="true" tabindex="-1"></a>    <span class="at">roommate_status =</span> <span class="st">&quot;Roommate Status&quot;</span>,</span>
+<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_avg_stress =</span> <span class="st">&quot;Maximum Stress&quot;</span>,</span>
+<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_avg_stress =</span> <span class="st">&quot;Minimum Stress&quot;</span></span>
+<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-156"><a href="#cb15-156" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-stress-time-series</span></span>
-<span id="cb15-158"><a href="#cb15-158" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: &quot;Patrick&#39;s Stress Levels in Chronological Order&quot;</span></span>
-<span id="cb15-159"><a href="#cb15-159" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap-location: &quot;top&quot;</span></span>
+<span id="cb15-154"><a href="#cb15-154" aria-hidden="true" tabindex="-1"></a>table_1</span>
+<span id="cb15-155"><a href="#cb15-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-156"><a href="#cb15-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-158"><a href="#cb15-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-159"><a href="#cb15-159" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data Visualization</span></span>
 <span id="cb15-160"><a href="#cb15-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(avg_stress_clean, <span class="fu">aes</span>(<span class="at">x =</span> clean_date, <span class="at">y =</span> Avg, <span class="at">color =</span> roommate_status)) <span class="sc">+</span></span>
-<span id="cb15-162"><a href="#cb15-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb15-163"><a href="#cb15-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Timeline&quot;</span>,</span>
-<span id="cb15-164"><a href="#cb15-164" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Average Stress Levels&quot;</span>,</span>
-<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Roommate Status&quot;</span>,</span>
-<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Patrick&#39;s Average Stress Levels (2025-2026)&quot;</span>)</span>
-<span id="cb15-167"><a href="#cb15-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-168"><a href="#cb15-168" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a><span class="fu">## Communicative Plot</span></span>
-<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-172"><a href="#cb15-172" aria-hidden="true" tabindex="-1"></a>This plot represents the cumulative average stress levels by roommate status and exam season. It appears that my stress levels are similar when comparing stress levels during exam seasons.</span>
+<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exploratory Plot</span></span>
+<span id="cb15-162"><a href="#cb15-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-163"><a href="#cb15-163" aria-hidden="true" tabindex="-1"></a>This plot represents my stress level trends from mid-2025 to present day according to roommate status.</span>
+<span id="cb15-164"><a href="#cb15-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a>It is interesting to note that my stress levels appear to dip once I move away from my roommate.</span>
+<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-stress-time-series</span></span>
+<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: &quot;Patrick&#39;s Stress Levels in Chronological Order&quot;</span></span>
+<span id="cb15-172"><a href="#cb15-172" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap-location: &quot;top&quot;</span></span>
 <span id="cb15-173"><a href="#cb15-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-176"><a href="#cb15-176" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-177"><a href="#cb15-177" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-stress-roommate</span></span>
-<span id="cb15-178"><a href="#cb15-178" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: &quot;Unadjusted Stress Levels&quot;</span></span>
-<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap-location: top</span></span>
+<span id="cb15-174"><a href="#cb15-174" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(avg_stress_clean, <span class="fu">aes</span>(<span class="at">x =</span> clean_date, <span class="at">y =</span> Avg, <span class="at">color =</span> roommate_status)) <span class="sc">+</span></span>
+<span id="cb15-175"><a href="#cb15-175" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb15-176"><a href="#cb15-176" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Timeline&quot;</span>,</span>
+<span id="cb15-177"><a href="#cb15-177" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Average Stress Levels&quot;</span>,</span>
+<span id="cb15-178"><a href="#cb15-178" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Roommate Status&quot;</span>,</span>
+<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Patrick&#39;s Average Stress Levels (2025-2026)&quot;</span>)</span>
 <span id="cb15-180"><a href="#cb15-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(avg_stress_clean, <span class="fu">aes</span>(<span class="at">x =</span> roommate_status, <span class="at">y =</span> Avg, <span class="at">fill =</span> exam_season)) <span class="sc">+</span></span>
-<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb15-183"><a href="#cb15-183" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>,</span>
-<span id="cb15-184"><a href="#cb15-184" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Average Stress Levels Summation&quot;</span>,</span>
-<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;Exam Season&quot;</span>,</span>
-<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Summation of Average Stress Levels by Roommate Status and Exam Season&quot;</span>) </span>
-<span id="cb15-187"><a href="#cb15-187" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-188"><a href="#cb15-188" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a><span class="fu"># Modeling</span></span>
-<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a><span class="fu">## Adjusted Linear Regression Model</span></span>
+<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-183"><a href="#cb15-183" aria-hidden="true" tabindex="-1"></a><span class="fu">## Communicative Plot</span></span>
+<span id="cb15-184"><a href="#cb15-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a>This plot represents the cumulative average stress levels by roommate status and exam season. It appears that my stress levels are similar when comparing stress levels during exam seasons.</span>
+<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-stress-roommate</span></span>
+<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: &quot;Unadjusted Stress Levels&quot;</span></span>
+<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap-location: top</span></span>
 <span id="cb15-193"><a href="#cb15-193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a><span class="fu">### Data Split</span></span>
-<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a>In this step, we define our data split with a random number generator. Specifically, 80% of the dataset is allocated for training and 20% is for testing.</span>
-<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: data-split</span></span>
-<span id="cb15-202"><a href="#cb15-202" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb15-203"><a href="#cb15-203" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb15-204"><a href="#cb15-204" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true  </span></span>
-<span id="cb15-205"><a href="#cb15-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-206"><a href="#cb15-206" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb15-207"><a href="#cb15-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-208"><a href="#cb15-208" aria-hidden="true" tabindex="-1"></a>data_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(avg_stress_clean, <span class="at">prop =</span> <span class="fl">0.80</span>)</span>
-<span id="cb15-209"><a href="#cb15-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-210"><a href="#cb15-210" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">training</span>(data_split)</span>
-<span id="cb15-211"><a href="#cb15-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-212"><a href="#cb15-212" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> <span class="fu">testing</span>(data_split)</span>
-<span id="cb15-213"><a href="#cb15-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-214"><a href="#cb15-214" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-215"><a href="#cb15-215" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-216"><a href="#cb15-216" aria-hidden="true" tabindex="-1"></a><span class="fu">### Define Continuous Prediction Model</span></span>
-<span id="cb15-217"><a href="#cb15-217" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-218"><a href="#cb15-218" aria-hidden="true" tabindex="-1"></a>I define the model as a linear regression model.</span>
-<span id="cb15-219"><a href="#cb15-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-222"><a href="#cb15-222" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-223"><a href="#cb15-223" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: linear-model</span></span>
-<span id="cb15-224"><a href="#cb15-224" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb15-225"><a href="#cb15-225" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb15-226"><a href="#cb15-226" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true  </span></span>
-<span id="cb15-227"><a href="#cb15-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-228"><a href="#cb15-228" aria-hidden="true" tabindex="-1"></a>lm_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb15-229"><a href="#cb15-229" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;lm&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-230"><a href="#cb15-230" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;regression&quot;</span>)</span>
-<span id="cb15-231"><a href="#cb15-231" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(avg_stress_clean, <span class="fu">aes</span>(<span class="at">x =</span> roommate_status, <span class="at">y =</span> Avg, <span class="at">fill =</span> exam_season)) <span class="sc">+</span></span>
+<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Average Stress Levels Summation&quot;</span>,</span>
+<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;Exam Season&quot;</span>,</span>
+<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Summation of Average Stress Levels by Roommate Status and Exam Season&quot;</span>) </span>
+<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-202"><a href="#cb15-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-203"><a href="#cb15-203" aria-hidden="true" tabindex="-1"></a><span class="fu"># Modeling</span></span>
+<span id="cb15-204"><a href="#cb15-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-205"><a href="#cb15-205" aria-hidden="true" tabindex="-1"></a><span class="fu">## Adjusted Linear Regression Model</span></span>
+<span id="cb15-206"><a href="#cb15-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-207"><a href="#cb15-207" aria-hidden="true" tabindex="-1"></a>I create a continuous prediction model because I want to predict my stress levels (e.g a numeric value) based on the presence of certain variables (e.g exam season vs no exam season).</span>
+<span id="cb15-208"><a href="#cb15-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-209"><a href="#cb15-209" aria-hidden="true" tabindex="-1"></a><span class="fu">### Data Split</span></span>
+<span id="cb15-210"><a href="#cb15-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-211"><a href="#cb15-211" aria-hidden="true" tabindex="-1"></a>In this step, we define our data split with a random number generator. Specifically, 80% of the dataset is allocated for training and 20% is for testing.</span>
+<span id="cb15-212"><a href="#cb15-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-215"><a href="#cb15-215" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-216"><a href="#cb15-216" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: data-split</span></span>
+<span id="cb15-217"><a href="#cb15-217" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb15-218"><a href="#cb15-218" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb15-219"><a href="#cb15-219" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true  </span></span>
+<span id="cb15-220"><a href="#cb15-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-221"><a href="#cb15-221" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb15-222"><a href="#cb15-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-223"><a href="#cb15-223" aria-hidden="true" tabindex="-1"></a>data_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(avg_stress_clean, <span class="at">prop =</span> <span class="fl">0.80</span>)</span>
+<span id="cb15-224"><a href="#cb15-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-225"><a href="#cb15-225" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">training</span>(data_split)</span>
+<span id="cb15-226"><a href="#cb15-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-227"><a href="#cb15-227" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> <span class="fu">testing</span>(data_split)</span>
+<span id="cb15-228"><a href="#cb15-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-229"><a href="#cb15-229" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-230"><a href="#cb15-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-231"><a href="#cb15-231" aria-hidden="true" tabindex="-1"></a><span class="fu">### Define Continuous Prediction Model</span></span>
 <span id="cb15-232"><a href="#cb15-232" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-233"><a href="#cb15-233" aria-hidden="true" tabindex="-1"></a><span class="fu">### Define Recipe</span></span>
+<span id="cb15-233"><a href="#cb15-233" aria-hidden="true" tabindex="-1"></a>I define the model as a linear regression model.</span>
 <span id="cb15-234"><a href="#cb15-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-235"><a href="#cb15-235" aria-hidden="true" tabindex="-1"></a>In laymans terms, the recipe is defined as the following equation:</span>
-<span id="cb15-236"><a href="#cb15-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-237"><a href="#cb15-237" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb15-238"><a href="#cb15-238" aria-hidden="true" tabindex="-1"></a>\text{Average Stress Levels} = \beta_0 + (\beta_1 \times \text{Roommate Status}) + (\beta_2 \times \text{Stressful Event}) + (\beta_3 \times \text{Exam Season})</span>
-<span id="cb15-239"><a href="#cb15-239" aria-hidden="true" tabindex="-1"></a>$$ In which my average stress levels are equivalent to my roommate status, stressful event, and exam seasons. I also introduce step variables to recipe such as converting nominal predictors into binary variables, standardize numeric data to have a mean of zero and standard deviation of one, and remove variables that have zero variance (e.g only 1 value).</span>
-<span id="cb15-240"><a href="#cb15-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-244"><a href="#cb15-244" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: lm-recipe</span></span>
-<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb15-247"><a href="#cb15-247" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true  </span></span>
-<span id="cb15-248"><a href="#cb15-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-237"><a href="#cb15-237" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-238"><a href="#cb15-238" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: linear-model</span></span>
+<span id="cb15-239"><a href="#cb15-239" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb15-240"><a href="#cb15-240" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb15-241"><a href="#cb15-241" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true  </span></span>
+<span id="cb15-242"><a href="#cb15-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a>lm_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb15-244"><a href="#cb15-244" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;lm&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;regression&quot;</span>)</span>
+<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-247"><a href="#cb15-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-248"><a href="#cb15-248" aria-hidden="true" tabindex="-1"></a><span class="fu">### Define Recipe</span></span>
 <span id="cb15-249"><a href="#cb15-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-250"><a href="#cb15-250" aria-hidden="true" tabindex="-1"></a>lm_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(</span>
-<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a>  Avg <span class="sc">~</span> roommate_status <span class="sc">+</span> stressful_event <span class="sc">+</span> exam_season,</span>
-<span id="cb15-252"><a href="#cb15-252" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train_data</span>
-<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-254"><a href="#cb15-254" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-256"><a href="#cb15-256" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>())</span>
-<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-258"><a href="#cb15-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-259"><a href="#cb15-259" aria-hidden="true" tabindex="-1"></a><span class="fu">### Combine into Workflow</span></span>
-<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a>The workflow step is a container object that bundles the model and recipe together.</span>
+<span id="cb15-250"><a href="#cb15-250" aria-hidden="true" tabindex="-1"></a>In laymans terms, the recipe is defined as the following equation:</span>
+<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-252"><a href="#cb15-252" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
+<span id="cb15-254"><a href="#cb15-254" aria-hidden="true" tabindex="-1"></a>\text{Average Stress Levels} = \beta_0 <span class="sc">\\</span>  + </span>
+<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a>(\beta_1 \times \text{Roommate Status}) <span class="sc">\\</span> + </span>
+<span id="cb15-256"><a href="#cb15-256" aria-hidden="true" tabindex="-1"></a>(\beta_2 \times \text{Stressful Event}) <span class="sc">\\</span> + </span>
+<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a>(\beta_3 \times \text{Exam Season}) <span class="sc">\\</span> + </span>
+<span id="cb15-258"><a href="#cb15-258" aria-hidden="true" tabindex="-1"></a>(\beta_4 \times \text{Graduate School}) <span class="sc">\\</span> + </span>
+<span id="cb15-259"><a href="#cb15-259" aria-hidden="true" tabindex="-1"></a>(\beta_5 \times \text{Academic Break})</span>
+<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
+<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a>$$ In which my average stress levels are equivalent to my roommate status, stressful event, exam season, graduate school and academic breaks.</span>
 <span id="cb15-262"><a href="#cb15-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-266"><a href="#cb15-266" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: workflow</span></span>
-<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb15-268"><a href="#cb15-268" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb15-269"><a href="#cb15-269" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true  </span></span>
-<span id="cb15-270"><a href="#cb15-270" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-271"><a href="#cb15-271" aria-hidden="true" tabindex="-1"></a>lm_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb15-272"><a href="#cb15-272" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-273"><a href="#cb15-273" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(lm_recipe)</span>
-<span id="cb15-274"><a href="#cb15-274" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-275"><a href="#cb15-275" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-276"><a href="#cb15-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-277"><a href="#cb15-277" aria-hidden="true" tabindex="-1"></a><span class="fu">### Fit Model</span></span>
-<span id="cb15-278"><a href="#cb15-278" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-279"><a href="#cb15-279" aria-hidden="true" tabindex="-1"></a>In this step, we let the model learn by feeding it the training data (e.g that 80% we allocated). The tidy step is to create a clean tibble.</span>
-<span id="cb15-280"><a href="#cb15-280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-283"><a href="#cb15-283" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-284"><a href="#cb15-284" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fit-model</span></span>
-<span id="cb15-285"><a href="#cb15-285" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb15-286"><a href="#cb15-286" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb15-287"><a href="#cb15-287" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true  </span></span>
-<span id="cb15-288"><a href="#cb15-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a>I also introduce step variables to recipe such as converting nominal predictors into binary variables, standardize numeric data to have a mean of zero and standard deviation of one, adjusting for the interaction effect between the roommate status coinciding with graduate school timing, and remove variables that have zero variance (e.g only 1 value).</span>
+<span id="cb15-264"><a href="#cb15-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-268"><a href="#cb15-268" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: lm-recipe</span></span>
+<span id="cb15-269"><a href="#cb15-269" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb15-270"><a href="#cb15-270" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb15-271"><a href="#cb15-271" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true  </span></span>
+<span id="cb15-272"><a href="#cb15-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-273"><a href="#cb15-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-274"><a href="#cb15-274" aria-hidden="true" tabindex="-1"></a>lm_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(</span>
+<span id="cb15-275"><a href="#cb15-275" aria-hidden="true" tabindex="-1"></a>  Avg <span class="sc">~</span> roommate_status <span class="sc">+</span> stressful_event <span class="sc">+</span> graduate_school <span class="sc">+</span> exam_season <span class="sc">+</span> academic_break,</span>
+<span id="cb15-276"><a href="#cb15-276" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train_data</span>
+<span id="cb15-277"><a href="#cb15-277" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-278"><a href="#cb15-278" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">%&gt;%</span> <span class="do">## make categorical variables into binary</span></span>
+<span id="cb15-279"><a href="#cb15-279" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb15-280"><a href="#cb15-280" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_interact</span>(<span class="at">terms =</span> <span class="sc">~</span> <span class="fu">starts_with</span>(<span class="st">&quot;roommate_status&quot;</span>)<span class="sc">:</span><span class="fu">starts_with</span>(<span class="st">&quot;graduate_school&quot;</span>)) <span class="sc">%&gt;%</span>  <span class="co"># create interaction effect between roommate status and graduate school</span></span>
+<span id="cb15-281"><a href="#cb15-281" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>()) <span class="sc">%&gt;%</span>  <span class="do">## remove zero variance predictors</span></span>
+<span id="cb15-282"><a href="#cb15-282" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_lincomb</span>(<span class="fu">all_predictors</span>()) <span class="sc">%&gt;%</span>  </span>
+<span id="cb15-283"><a href="#cb15-283" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_corr</span>(<span class="fu">all_predictors</span>(), <span class="at">threshold =</span> <span class="fl">0.9</span>) <span class="do">## remove perfectly correlated variables</span></span>
+<span id="cb15-284"><a href="#cb15-284" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-285"><a href="#cb15-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-286"><a href="#cb15-286" aria-hidden="true" tabindex="-1"></a><span class="fu">### Combine into Workflow</span></span>
+<span id="cb15-287"><a href="#cb15-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-288"><a href="#cb15-288" aria-hidden="true" tabindex="-1"></a>The workflow step is a container object that bundles the model and recipe together.</span>
 <span id="cb15-289"><a href="#cb15-289" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-290"><a href="#cb15-290" aria-hidden="true" tabindex="-1"></a>lm_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(lm_workflow, <span class="at">data =</span> train_data)</span>
-<span id="cb15-291"><a href="#cb15-291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-292"><a href="#cb15-292" aria-hidden="true" tabindex="-1"></a><span class="fu">extract_fit_parsnip</span>(lm_fit) <span class="sc">%&gt;%</span> <span class="fu">tidy</span>()</span>
-<span id="cb15-293"><a href="#cb15-293" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-294"><a href="#cb15-294" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-295"><a href="#cb15-295" aria-hidden="true" tabindex="-1"></a><span class="fu">### Evaluate Performance</span></span>
-<span id="cb15-296"><a href="#cb15-296" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-297"><a href="#cb15-297" aria-hidden="true" tabindex="-1"></a>Finally, we evaluate our model&#39;s performance by using test data and by checking the metrics. We want to ensure that our model didn&#39;t just simply memorize the training data, but can actually predict stress levels using new values. Essentially we are comparing our predicted stress levels to the actual data.</span>
-<span id="cb15-298"><a href="#cb15-298" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-301"><a href="#cb15-301" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-302"><a href="#cb15-302" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: eval-lm-model-performance</span></span>
-<span id="cb15-303"><a href="#cb15-303" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb15-304"><a href="#cb15-304" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb15-305"><a href="#cb15-305" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true  </span></span>
-<span id="cb15-306"><a href="#cb15-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-292"><a href="#cb15-292" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-293"><a href="#cb15-293" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: workflow</span></span>
+<span id="cb15-294"><a href="#cb15-294" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb15-295"><a href="#cb15-295" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb15-296"><a href="#cb15-296" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true  </span></span>
+<span id="cb15-297"><a href="#cb15-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-298"><a href="#cb15-298" aria-hidden="true" tabindex="-1"></a>lm_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb15-299"><a href="#cb15-299" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-300"><a href="#cb15-300" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(lm_recipe)</span>
+<span id="cb15-301"><a href="#cb15-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-302"><a href="#cb15-302" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-303"><a href="#cb15-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-304"><a href="#cb15-304" aria-hidden="true" tabindex="-1"></a><span class="fu">### Fit Model</span></span>
+<span id="cb15-305"><a href="#cb15-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-306"><a href="#cb15-306" aria-hidden="true" tabindex="-1"></a>In this step, we let the model learn by feeding it the training data (e.g that 80% we allocated). The tidy step is to create a clean tibble.</span>
 <span id="cb15-307"><a href="#cb15-307" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-308"><a href="#cb15-308" aria-hidden="true" tabindex="-1"></a><span class="co"># Make predictions</span></span>
-<span id="cb15-309"><a href="#cb15-309" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm_fit, <span class="at">new_data =</span> test_data) <span class="sc">%&gt;%</span></span>
-<span id="cb15-310"><a href="#cb15-310" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test_data)</span>
-<span id="cb15-311"><a href="#cb15-311" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-312"><a href="#cb15-312" aria-hidden="true" tabindex="-1"></a><span class="co"># Check metrics</span></span>
-<span id="cb15-313"><a href="#cb15-313" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">metrics</span>(results, <span class="at">truth =</span> Avg, <span class="at">estimate =</span> .pred)</span>
-<span id="cb15-314"><a href="#cb15-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-310"><a href="#cb15-310" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-311"><a href="#cb15-311" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fit-model</span></span>
+<span id="cb15-312"><a href="#cb15-312" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb15-313"><a href="#cb15-313" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb15-314"><a href="#cb15-314" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true  </span></span>
 <span id="cb15-315"><a href="#cb15-315" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-316"><a href="#cb15-316" aria-hidden="true" tabindex="-1"></a>metrics <span class="sc">%&gt;%</span> </span>
-<span id="cb15-317"><a href="#cb15-317" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(</span>
-<span id="cb15-318"><a href="#cb15-318" aria-hidden="true" tabindex="-1"></a>    <span class="at">format =</span> <span class="st">&quot;html&quot;</span>,</span>
-<span id="cb15-319"><a href="#cb15-319" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;Linear Regression Model Performance&quot;</span>,</span>
-<span id="cb15-320"><a href="#cb15-320" aria-hidden="true" tabindex="-1"></a>    <span class="at">digits =</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-321"><a href="#cb15-321" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(</span>
-<span id="cb15-322"><a href="#cb15-322" aria-hidden="true" tabindex="-1"></a>    <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>, <span class="st">&quot;responsive&quot;</span>),</span>
-<span id="cb15-323"><a href="#cb15-323" aria-hidden="true" tabindex="-1"></a>    <span class="at">full_width =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb15-324"><a href="#cb15-324" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="st">&quot;left&quot;</span></span>
-<span id="cb15-325"><a href="#cb15-325" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-326"><a href="#cb15-326" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-327"><a href="#cb15-327" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-328"><a href="#cb15-328" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conclusion</span></span>
-<span id="cb15-329"><a href="#cb15-329" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-330"><a href="#cb15-330" aria-hidden="true" tabindex="-1"></a>According to our evaluative performance results, we have an R-squared value of 0.659</span>
-<span id="cb15-331"><a href="#cb15-331" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-332"><a href="#cb15-332" aria-hidden="true" tabindex="-1"></a><span class="fu">## Limitations {#sec-garmin-limitations}</span></span>
+<span id="cb15-316"><a href="#cb15-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-317"><a href="#cb15-317" aria-hidden="true" tabindex="-1"></a>lm_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(lm_workflow, <span class="at">data =</span> train_data)</span>
+<span id="cb15-318"><a href="#cb15-318" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-319"><a href="#cb15-319" aria-hidden="true" tabindex="-1"></a><span class="fu">extract_fit_parsnip</span>(lm_fit) <span class="sc">%&gt;%</span> <span class="fu">tidy</span>()</span>
+<span id="cb15-320"><a href="#cb15-320" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-321"><a href="#cb15-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-322"><a href="#cb15-322" aria-hidden="true" tabindex="-1"></a><span class="fu">### Evaluate Performance</span></span>
+<span id="cb15-323"><a href="#cb15-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-324"><a href="#cb15-324" aria-hidden="true" tabindex="-1"></a>Finally, we evaluate our model&#39;s performance by using test data and by checking the metrics. We want to ensure that our model didn&#39;t just simply memorize the training data, but can actually predict stress levels using new values. Essentially we are comparing our predicted stress levels to the actual data.</span>
+<span id="cb15-325"><a href="#cb15-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-328"><a href="#cb15-328" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-329"><a href="#cb15-329" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: eval-lm-model-performance</span></span>
+<span id="cb15-330"><a href="#cb15-330" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb15-331"><a href="#cb15-331" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb15-332"><a href="#cb15-332" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true  </span></span>
 <span id="cb15-333"><a href="#cb15-333" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-334"><a href="#cb15-334" aria-hidden="true" tabindex="-1"></a>As noted earlier, there are limitations to this analysis. The biggest confounder and limitation of the Garmin watch itself is that it cannot differentiate between positive excitement and negative anxiety, both of which can increase stress levels. Therefore, it is entirely possible that those instances I was stressed may just be me feeling extremely excited (e.g spending time with family).</span>
-<span id="cb15-335"><a href="#cb15-335" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-336"><a href="#cb15-336" aria-hidden="true" tabindex="-1"></a>Another significant limitation of this analysis is that I only have roughly 6 weeks of post-roommate stress level data.</span>
+<span id="cb15-334"><a href="#cb15-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-335"><a href="#cb15-335" aria-hidden="true" tabindex="-1"></a><span class="co"># Make predictions</span></span>
+<span id="cb15-336"><a href="#cb15-336" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm_fit, <span class="at">new_data =</span> test_data) <span class="sc">%&gt;%</span></span>
+<span id="cb15-337"><a href="#cb15-337" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test_data)</span>
+<span id="cb15-338"><a href="#cb15-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-339"><a href="#cb15-339" aria-hidden="true" tabindex="-1"></a><span class="co"># Check metrics</span></span>
+<span id="cb15-340"><a href="#cb15-340" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">metrics</span>(results, <span class="at">truth =</span> Avg, <span class="at">estimate =</span> .pred)</span>
+<span id="cb15-341"><a href="#cb15-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-342"><a href="#cb15-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-343"><a href="#cb15-343" aria-hidden="true" tabindex="-1"></a>metrics <span class="sc">%&gt;%</span> </span>
+<span id="cb15-344"><a href="#cb15-344" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(</span>
+<span id="cb15-345"><a href="#cb15-345" aria-hidden="true" tabindex="-1"></a>    <span class="at">format =</span> <span class="st">&quot;html&quot;</span>,</span>
+<span id="cb15-346"><a href="#cb15-346" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;Linear Regression Model Performance&quot;</span>,</span>
+<span id="cb15-347"><a href="#cb15-347" aria-hidden="true" tabindex="-1"></a>    <span class="at">digits =</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-348"><a href="#cb15-348" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(</span>
+<span id="cb15-349"><a href="#cb15-349" aria-hidden="true" tabindex="-1"></a>    <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>, <span class="st">&quot;responsive&quot;</span>),</span>
+<span id="cb15-350"><a href="#cb15-350" aria-hidden="true" tabindex="-1"></a>    <span class="at">full_width =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb15-351"><a href="#cb15-351" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="st">&quot;left&quot;</span></span>
+<span id="cb15-352"><a href="#cb15-352" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-353"><a href="#cb15-353" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-354"><a href="#cb15-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-355"><a href="#cb15-355" aria-hidden="true" tabindex="-1"></a><span class="fu">## Interpretation and Reflection</span></span>
+<span id="cb15-356"><a href="#cb15-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-357"><a href="#cb15-357" aria-hidden="true" tabindex="-1"></a>According to our evaluative performance results, we have an R-squared value of 0.636, mean absolute error (mae) of 3.884, and a root mean squared error (rmse) of 4.723 In other words, my model can explain \~63.6% of my average stress levels and thus, my model is a moderate-to-strong fit. The mae means that my model is off by about 3.9 stress level units. And, the rmse suggests that there&#39;s a few instances where my model performed poorly (e.g had really large residuals).</span>
+<span id="cb15-358"><a href="#cb15-358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-359"><a href="#cb15-359" aria-hidden="true" tabindex="-1"></a>To conclude, my model is only 63.6% accurate in determining my near-future average stress levels.</span>
+<span id="cb15-360"><a href="#cb15-360" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-361"><a href="#cb15-361" aria-hidden="true" tabindex="-1"></a><span class="fu">### Limitations {#sec-garmin-limitations}</span></span>
+<span id="cb15-362"><a href="#cb15-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-363"><a href="#cb15-363" aria-hidden="true" tabindex="-1"></a>As noted earlier, there are limitations to this analysis. The biggest confounder and limitation of the Garmin watch itself is that it cannot differentiate between positive excitement and negative anxiety, both of which can increase stress levels. Therefore, it is entirely possible that those instances I was stressed may just be me feeling extremely excited (e.g spending time with family).</span>
+<span id="cb15-364"><a href="#cb15-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-365"><a href="#cb15-365" aria-hidden="true" tabindex="-1"></a>Another significant limitation of this analysis is that I only have roughly 6 weeks of post-roommate stress level data, whereas, I have several months of pre-roommate and roommate data. Therefore, more post-roommate stress levels data need to be collected to create a more accurate model.</span>
+<span id="cb15-366"><a href="#cb15-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-367"><a href="#cb15-367" aria-hidden="true" tabindex="-1"></a>I also recommend conducting tests to determine if highly correlated variables could be artificially inflating the R-squared value.</span>
+<span id="cb15-368"><a href="#cb15-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-369"><a href="#cb15-369" aria-hidden="true" tabindex="-1"></a><span class="fu">### Reflection</span></span>
+<span id="cb15-370"><a href="#cb15-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-371"><a href="#cb15-371" aria-hidden="true" tabindex="-1"></a>Throughout this project, I learned how to make and train a linear regression! I thought this project was really interesting because I could define stressors, account for said stressors (e.g step_corr to remove highly correlated variables), and interpret these findings. I thought this was a cool way to actually apply what I&#39;m learning in statistics to a tangible opportunity.</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

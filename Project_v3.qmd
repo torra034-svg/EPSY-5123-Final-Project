@@ -15,7 +15,9 @@ format:
 editor: visual
 ---
 
-# Research Question: Did my former roommate give me stress that is statistically significant? And, can we predict my stress levels in the near-future?
+# Research Question: Can we predict my stress levels in the near-future?
+
+To answer this question, we must account for variables that I believe influence my stress levels. These variables are mainly split into academic and non-academic stressors as noted in the @sec-stress-variables portion.
 
 # Set-up
 
@@ -56,13 +58,17 @@ avg_stress <- read_excel("stress_data_avg.xlsx")
 
 # Data Wrangling
 
-## Data Cleaning
+## Data Cleaning 
 
 I subset the dataset into a new dataset, "avg_stress_clean", to ensure that the original dataset remains static in case something goes wrong and I need to compare values.
 
 I first cleaned the data by removing NA values from the stress column "Avg". I then cleaned the date column by extracting only the start of the week and pasting the year (e.g May 21, 2025).
 
-Three additional columns were created for analysis purposes: roommate_status, stressful_event and exam_season. Respectively, the first variable refers to my living arrangements with classes including pre-roommate \[living with family\], roommate, and post-roommate \[living by myself\]. The second variable includes non-academic stressful events that were an extreme source of frustration for me such as a flat tire, a missed paycheck, etc. Lastly, the third variable refers to academic stressors such as mid-terms and final exams.
+### Stress variables  {#sec-stress-variables}
+
+Additional columns were created for analysis purposes: roommate_status, stressful_event, exam_season, graduate_school, and academic_break. Respectively, the first variable refers to my living arrangements including pre-roommate \[living with family\], roommate, and post-roommate \[living by myself\]. The second variable includes non-academic stressful events that were an extreme source of frustration for me such as a flat tire, a missed paycheck, etc. Lastly, the third variable refers to academic stressors such as mid-terms and final exams.
+
+graduate_school refers to my time in graduate school occurring anytime after September 9th, 2025. academic_break refers to the UMN academic breaks such as Thanksgiving, Winter break, etc.
 
 ```{r}
 #| label: df-clean
@@ -186,6 +192,8 @@ ggplot(avg_stress_clean, aes(x = roommate_status, y = Avg, fill = exam_season)) 
 
 ## Adjusted Linear Regression Model
 
+I create a continuous prediction model because I want to predict my stress levels (e.g a numeric value) based on the presence of certain variables (e.g exam season vs no exam season).
+
 ### Data Split
 
 In this step, we define our data split with a random number generator. Specifically, 80% of the dataset is allocated for training and 20% is for testing.
@@ -226,8 +234,17 @@ lm_spec <- linear_reg() %>%
 In laymans terms, the recipe is defined as the following equation:
 
 $$
-\text{Average Stress Levels} = \beta_0 + (\beta_1 \times \text{Roommate Status}) + (\beta_2 \times \text{Stressful Event}) + (\beta_3 \times \text{Exam Season})
-$$ In which my average stress levels are equivalent to my roommate status, stressful event, and exam seasons. I also introduce step variables to recipe such as converting nominal predictors into binary variables, standardize numeric data to have a mean of zero and standard deviation of one, and remove variables that have zero variance (e.g only 1 value).
+\begin{split}
+\text{Average Stress Levels} = \beta_0 \\  + 
+(\beta_1 \times \text{Roommate Status}) \\ + 
+(\beta_2 \times \text{Stressful Event}) \\ + 
+(\beta_3 \times \text{Exam Season}) \\ + 
+(\beta_4 \times \text{Graduate School}) \\ + 
+(\beta_5 \times \text{Academic Break})
+\end{split}
+$$ In which my average stress levels are equivalent to my roommate status, stressful event, exam season, graduate school and academic breaks.
+
+I also introduce step variables to recipe such as converting nominal predictors into binary variables, standardize numeric data to have a mean of zero and standard deviation of one, adjusting for the interaction effect between the roommate status coinciding with graduate school timing, and remove variables that have zero variance (e.g only 1 value).
 
 ```{r}
 #| label: lm-recipe
@@ -240,9 +257,12 @@ lm_recipe <- recipe(
   Avg ~ roommate_status + stressful_event + graduate_school + exam_season + academic_break,
   data = train_data
 ) %>% 
-  step_dummy(all_nominal_predictors()) %>% 
-  step_normalize(all_predictors()) %>% 
-  step_zv(all_predictors())
+  step_dummy(all_nominal_predictors()) %>% ## make categorical variables into binary
+  step_normalize(all_predictors()) %>%
+  step_interact(terms = ~ starts_with("roommate_status"):starts_with("graduate_school")) %>%  # create interaction effect between roommate status and graduate school
+  step_zv(all_predictors()) %>%  ## remove zero variance predictors
+  step_lincomb(all_predictors()) %>%  
+  step_corr(all_predictors(), threshold = 0.9) ## remove perfectly correlated variables
 ```
 
 ### Combine into Workflow
@@ -308,14 +328,20 @@ metrics %>%
   )
 ```
 
-## Conclusion
+## Interpretation and Reflection
 
-According to our evaluative performance results, we have an R-squared value of 0.659, mean absolute error (mae) of 3.856, and a root mean squared error (rmse) of 4.714. In other words, my model can explain \~65.9% of my average stress levels and thus, my model is a moderate-to-strong fit. The mae means that my model is off by about 3.9 stress level units. And, the rmse suggests that there's a few instances where my model performed poorly (e.g had really large residuals).
+According to our evaluative performance results, we have an R-squared value of 0.636, mean absolute error (mae) of 3.884, and a root mean squared error (rmse) of 4.723 In other words, my model can explain \~63.6% of my average stress levels and thus, my model is a moderate-to-strong fit. The mae means that my model is off by about 3.9 stress level units. And, the rmse suggests that there's a few instances where my model performed poorly (e.g had really large residuals).
 
-To conclude, my model is only 65.9% accurate in determining my near-future average stress levels. Further research would need to done to adjust for correlating variables such as average stress levels and weeks I was in an academic setting.
+To conclude, my model is only 63.6% accurate in determining my near-future average stress levels.
 
-## Limitations {#sec-garmin-limitations}
+### Limitations {#sec-garmin-limitations}
 
 As noted earlier, there are limitations to this analysis. The biggest confounder and limitation of the Garmin watch itself is that it cannot differentiate between positive excitement and negative anxiety, both of which can increase stress levels. Therefore, it is entirely possible that those instances I was stressed may just be me feeling extremely excited (e.g spending time with family).
 
-Another significant limitation of this analysis is that I only have roughly 6 weeks of post-roommate stress level data.
+Another significant limitation of this analysis is that I only have roughly 6 weeks of post-roommate stress level data, whereas, I have several months of pre-roommate and roommate data. Therefore, more post-roommate stress levels data need to be collected to create a more accurate model.
+
+I also recommend conducting tests to determine if highly correlated variables could be artificially inflating the R-squared value.
+
+### Reflection
+
+Throughout this project, I learned how to make and train a linear regression! I thought this project was really interesting because I could define stressors, account for said stressors (e.g step_corr to remove highly correlated variables), and interpret these findings. I thought this was a cool way to actually apply what I'm learning in statistics to a tangible opportunity.
